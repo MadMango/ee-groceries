@@ -1,13 +1,11 @@
 import './App.css';
 
-function App() {
+function App () {
   return (
-    <div >
-      <header >
-        <p>
-          This is about to become a grocery list
-        </p>
-      </header>
+    <div data-testid="groceries-wrapper" className="groceries-wrapper">
+      <div>
+        hello
+      </div>
     </div>
   );
 }
