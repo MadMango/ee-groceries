@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@adobe/react-spectrum": "^3.22.0",
+    "@react-spectrum/dnd": "^3.0.0-rc.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -14,13 +16,16 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "eslint . && react-scripts build",
-    "test": "eslint . && react-scripts test",
+    "test:unit": "eslint . && react-scripts test",
+    "test:component": "eslint . && cypress run --component",
+    "test:component:headed:stayopen": "eslint . && cypress run --headed --component --no-exit",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": [
       "react-app",
-      "react-app/jest"
+      "react-app/jest",
+      "plugin:cypress/recommended"
     ],
     "rules": {
       "semi": [
@@ -41,7 +46,13 @@
       "last 1 safari version"
     ]
   },
+  "proxy": "http://localhost:5000/",
   "devDependencies": {
-    "eslint": "^8.24.0"
+    "@babel/preset-react": "^7.18.6",
+    "cypress": "^10.9.0",
+    "cypress-plugin-tab": "^1.0.5",
+    "eslint": "^8.24.0",
+    "eslint-plugin-cypress": "^2.12.1",
+    "msw": "^0.47.4"
   }
 }

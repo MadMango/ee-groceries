@@ -1,78 +1,24 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import App from './App';
-
-// mock API calls later with: https://testing-library.com/docs/react-testing-library/example-intro/#mock
-
-const clickById = (container, id) => fireEvent(
-  // eslint-disable-next-line testing-library/no-node-access
-  container.getElementById(id),
-  new MouseEvent('click', {
-    bubbles: true,
-    cancelable: true,
+import groceries from './fixtures/groceries.json';
+import { rest } from 'msw';
+import { setupServer } from 'msw/node';
+const server = setupServer(
+  rest.get('http://localhost:5000/groceries', (req, res, ctx) => {
+    return res(ctx.json(groceries));
   }),
 );
 
-test('renders list wrapper', () => {
+// establish API mocking before all tests
+beforeAll(() => server.listen());
+// reset any request handlers that are declared as a part of our tests
+// (i.e. for testing one-time error scenarios)
+afterEach(() => server.resetHandlers());
+// clean up once the tests are done
+afterAll(() => server.close());
+
+test('renders list wrapper and list items', async () => {
   render(<App />);
   const wrapper = screen.getByTestId('groceries-wrapper');
   expect(wrapper).toBeInTheDocument();
-});
-
-test('reorders list items', () => {
-  render(<App />);
-  const listItems = screen.getAllByTestId('list-item');
-  expect(listItems.length).toBe('6');
-  expect(listItems[0].textContent).toBe('Apples 🍏');
-  expect(listItems[1].textContent).toBe('Blueberries 🫐');
-  expect(listItems[2].textContent).toBe('Kiwi 🥝');
-  expect(listItems[3].textContent).toBe('Pineapple 🍍');
-  expect(listItems[4].textContent).toBe('Mango 🥭');
-  expect(listItems[5].textContent).toBe('Watermelon 🍉');
-});
-
-test('changes the order of the list', () => {
-  const { container } = render(<App />);
-  const listItems = screen.getAllByTestId('list-item');
-  expect(listItems.length).toBe('6');
-  expect(listItems[0].textContent).toBe('Apples 🍏');
-  expect(listItems[1].textContent).toBe('Blueberries 🫐');
-  expect(listItems[2].textContent).toBe('Kiwi 🥝');
-  expect(listItems[3].textContent).toBe('Pineapple 🍍');
-  expect(listItems[4].textContent).toBe('Mango 🥭');
-  expect(listItems[5].textContent).toBe('Watermelon 🍉');
-
-  clickById(container, 'Apples 🍏MoveDown');
-
-
-  clickById(container, 'Kiwi 🥝MoveUp');
-  clickById(container, 'Kiwi 🥝MoveUp');
-
-  expect(listItems[2].textContent).toBe('Kiwi 🥝');
-  expect(listItems[0].textContent).toBe('Blueberries 🫐');
-  expect(listItems[1].textContent).toBe('Apples 🍏');
-  expect(listItems[3].textContent).toBe('Pineapple 🍍');
-  expect(listItems[4].textContent).toBe('Mango 🥭');
-  expect(listItems[5].textContent).toBe('Watermelon 🍉');
-});
-
-test('does not change the order if items are already at the start or the end', () => {
-  const { container } = render(<App />);
-  const listItems = screen.getAllByTestId('list-item');
-  expect(listItems.length).toBe('6');
-  expect(listItems[0].textContent).toBe('Apples 🍏');
-  expect(listItems[1].textContent).toBe('Blueberries 🫐');
-  expect(listItems[2].textContent).toBe('Kiwi 🥝');
-  expect(listItems[3].textContent).toBe('Pineapple 🍍');
-  expect(listItems[4].textContent).toBe('Mango 🥭');
-  expect(listItems[5].textContent).toBe('Watermelon 🍉');
-
-  clickById(container, 'Apples 🍏MoveUp');
-  clickById(container, 'Watermelon 🍉MoveDown');
-
-  expect(listItems[0].textContent).toBe('Apples 🍏');
-  expect(listItems[1].textContent).toBe('Blueberries 🫐');
-  expect(listItems[2].textContent).toBe('Kiwi 🥝');
-  expect(listItems[3].textContent).toBe('Pineapple 🍍');
-  expect(listItems[4].textContent).toBe('Mango 🥭');
-  expect(listItems[5].textContent).toBe('Watermelon 🍉');
 });
