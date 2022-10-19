@@ -17,7 +17,7 @@ Open two terminals
 * In terminal 1, go to the `groceries-fe` folder and run `npm i`
   * run `npm start`
 * In terminal 2, go to the `groceries-api` folder and run `npm i`
-  * run `npm start:dev`
+  * run `npm run start:dev`
 
 This should start the server on port 5000 and the React app on port 3000, as well as open it in a browser.
 
