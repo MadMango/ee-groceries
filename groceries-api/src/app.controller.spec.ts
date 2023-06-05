@@ -28,12 +28,31 @@ describe('AppController', () => {
       expect(
         appController.addGroceries({
           name: 'Potato 🥔',
+          quantity: 2,
         }),
       ).toStrictEqual([
         ...groceries,
         {
           id: expect.any(String),
           order: 6,
+          quantity: 2,
+          name: 'Potato 🥔',
+          ticked: false,
+        },
+      ]);
+    });
+
+    it('should default the quantity', () => {
+      expect(
+        appController.addGroceries({
+          name: 'Potato 🥔',
+        }),
+      ).toStrictEqual([
+        ...groceries,
+        {
+          id: expect.any(String),
+          order: 6,
+          quantity: 1,
           name: 'Potato 🥔',
           ticked: false,
         },

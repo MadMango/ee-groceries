@@ -46,7 +46,7 @@ export class AppService {
   }
 
   addGroceries(newItem): Groceries {
-    const { name, ticked = false } = newItem;
+    const { name, quantity = 1, ticked = false } = newItem;
 
     if (!name) {
       throw new HttpException(
@@ -66,6 +66,7 @@ export class AppService {
       {
         id: nanoid(6),
         name,
+        quantity,
         ticked,
       },
       ...tickedGroceries,
